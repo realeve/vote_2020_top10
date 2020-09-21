@@ -1,0 +1,32 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.am-list {
+  &-body {
+    background-color: unset !important;
+  }
+  &-line {
+    display: flex;
+    padding-right: 0 !important;
+  }
+  &-content {
+    flex: 1;
+  }
+}
+
+.am-list-item {
+  padding-left: 5px !important;
+  .am-list-line .am-list-extra {
+    flex-basis: unset !important;
+    .am-stepper-handler {
+      transform: scale(0.8);
+    }
+  }
+}
