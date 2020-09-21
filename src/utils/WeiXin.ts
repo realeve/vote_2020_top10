@@ -73,12 +73,12 @@ const initWxShare: () => void = () => {
         'menuItem:openWithSafari',
         'menuItem:share:email',
         // 从以下起禁止分享功能
-        // 'menuItem:share:appMessage',
-        // 'menuItem:share:timeline',
-        // 'menuItem:share:qq',
-        // 'menuItem:share:weiboApp',
-        // 'menuItem:share:QZone',
-        // 'menuItem:share:brand',
+        'menuItem:share:appMessage',
+        'menuItem:share:timeline',
+        'menuItem:share:qq',
+        'menuItem:share:weiboApp',
+        'menuItem:share:QZone',
+        'menuItem:share:brand',
       ],
     });
   });

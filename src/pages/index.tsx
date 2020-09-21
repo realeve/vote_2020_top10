@@ -11,9 +11,12 @@ import * as lib from '@/utils/lib';
 
 import Detail from './votedetail';
 
-function NewPage({ user, usertype = 0 }: any) {
+// 部署链接不同
+const _usertype = window.location.href.includes('2020art_teacher') ? 1 : 0;
+
+function NewPage({ user, usertype = _usertype }: any) {
   const [state, setState] = useState([[]]);
-  const [valid, setValid] = useState(false);
+  const [valid, setValid] = useState(false); 
   useEffect(() => {
     let res = window.localStorage.getItem('art2020');
     if (res == lib.ymd()) {
