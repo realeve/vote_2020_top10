@@ -38,7 +38,7 @@ export default {
   },
   subscriptions: {
     async setup({ dispatch, history }) {
-      if(window.location.href.includes('vodedetail')){
+      if(window.location.href.includes('votedetail')){
         return;
       }
       // 不获取个人信息

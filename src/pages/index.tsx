@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Toast, List, WingBlank, Button } from 'antd-mobile';
-import styles from './index.less';
+import { Toast, WingBlank, Button } from 'antd-mobile';
 import { connect } from 'dva';
 import FormComponent from '@/components/FormComponent';
 import router from 'umi/router';
@@ -16,7 +15,7 @@ const _usertype = window.location.href.includes('2020art_teacher') ? 1 : 0;
 
 function NewPage({ user, usertype = _usertype }: any) {
   const [state, setState] = useState([[]]);
-  const [valid, setValid] = useState(false); 
+  const [valid, setValid] = useState(false);
   useEffect(() => {
     let res = window.localStorage.getItem('art2020');
     if (res == lib.ymd()) {
