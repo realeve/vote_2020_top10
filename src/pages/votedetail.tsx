@@ -7,16 +7,17 @@ import paper from '@/utils/paper';
 const handleData = ({ data }) => {
   let arr = R.repeat(0, 10);
   let arrTeacher = R.repeat(0, 10);
-  let sumAudience = 0,
-    sumTeacher = 0;
+  let sumAudience = data.filter((item) => item.usertype == 0).length;
+  let sumTeacher = data.length - sumAudience;
+
+  data.filter((item) => item.usertype == 0).length;
+
   data.map((item) =>
     item.choice.split(',').map((idx) => {
       if (item.usertype == 0) {
         arr[idx] += 1;
-        sumAudience += 1;
       } else {
         arrTeacher[idx] += 1;
-        sumTeacher += 1;
       }
     }),
   );
@@ -51,7 +52,10 @@ export default () => {
   return (
     <WingBlank>
       <h3>投票详情</h3>
-      <p>总分=(观众票数/观众总人数{state.sumAudience})*30 + (评委票数/评委总人数{state.sumTeacher})*70</p>
+      <p>
+        总分=(观众票数/观众总人数{state.sumAudience})*30 + (评委票数/评委总人数{state.sumTeacher}
+        )*70
+      </p>
       <ul>
         <li>
           <span>选手</span>

@@ -9,7 +9,7 @@ import * as R from 'ramda';
 import paper from '@/utils/paper';
 import * as lib from '@/utils/lib';
 
-import Detail from './votedetail';
+// import Detail from './votedetail';
 
 // 部署链接不同
 const _usertype = window.location.href.includes('2020art_teacher') ? 1 : 0;
@@ -92,7 +92,7 @@ function NewPage({ user, usertype = _usertype }: any) {
         {!valid ? '已投票' : '提交'}
       </Button>
 
-      {usertype == 1 && <Detail />}
+      {/* {usertype == 1 && <Detail />} */}
     </div>
   );
 }

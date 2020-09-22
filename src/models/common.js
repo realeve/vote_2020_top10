@@ -38,6 +38,9 @@ export default {
   },
   subscriptions: {
     async setup({ dispatch, history }) {
+      if(window.location.href.includes('vodedetail')){
+        return;
+      }
       // 不获取个人信息
       await dispatch({ type: 'getWxUser' });
       await weixin.init(false);
