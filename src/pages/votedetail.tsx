@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { WingBlank } from 'antd-mobile';
-import styles from './index.less';
 import * as db from '@/utils/db';
 import * as R from 'ramda';
 import paper from '@/utils/paper';
@@ -8,36 +7,51 @@ import paper from '@/utils/paper';
 const handleData = ({ data }) => {
   let arr = R.repeat(0, 10);
   let arrTeacher = R.repeat(0, 10);
-  console.log(data);
+  let sumAudience = 0,
+    sumTeacher = 0;
   data.map((item) =>
     item.choice.split(',').map((idx) => {
       if (item.usertype == 0) {
         arr[idx] += 1;
+        sumAudience += 1;
       } else {
         arrTeacher[idx] += 1;
+        sumTeacher += 1;
       }
     }),
   );
   let res = R.clone(paper[0].data);
-  return res
+  let list = res
     .map((item, idx) => ({
       ...item,
       value: arr[idx],
       valueTeacher: arrTeacher[idx],
-      score: (arrTeacher[idx] * 0.7 + arr[idx] * 0.3).toFixed(1),
+      score: (
+        (sumTeacher == 0 ? 0 : (arrTeacher[idx] / sumTeacher) * 100 * 0.7) +
+        (sumAudience == 0 ? 0 : (arr[idx] / sumAudience) * 100 * 0.3)
+      ).toFixed(2),
     }))
     .sort((b, a) => Number(a.score) - Number(b.score));
+  return {
+    list,
+    sumTeacher,
+    sumAudience,
+  };
 };
 
 export default () => {
-  const [state, setState] = useState([]);
+  const [state, setState] = useState({
+    list: [],
+    sumTeacher: 0,
+    sumAudience: 0,
+  });
   useEffect(() => {
     db.getCbpc2020VoteArt().then(handleData).then(setState);
   }, []);
   return (
     <WingBlank>
       <h3>投票详情</h3>
-      <p>总分=观众票数*0.3 + 评委票数*0.7</p>
+      <p>总分=(观众票数/观众总人数{state.sumAudience})*30 + (评委票数/评委总人数{state.sumTeacher})*70</p>
       <ul>
         <li>
           <span>选手</span>
@@ -53,7 +67,7 @@ export default () => {
           </span>
           <span>总分</span>
         </li>
-        {state.map((item, idx) => (
+        {state.list.map((item, idx) => (
           <li key={item.name}>
             <span>
               {idx + 1}.{item.name}
