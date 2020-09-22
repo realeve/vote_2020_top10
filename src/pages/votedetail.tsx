@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { WingBlank } from 'antd-mobile';
+import { Button, Toast, Modal } from 'antd-mobile';
 import * as db from '@/utils/db';
 import * as R from 'ramda';
 import paper from '@/utils/paper';
@@ -48,14 +49,21 @@ export default () => {
     sumTeacher: 0,
     sumAudience: 0,
   });
-  useEffect(() => {
+
+  const [status, setStatus] = useState(0);
+
+  const update = () => {
     db.getCbpc2020VoteArt().then(handleData).then(setState);
-  }, []);
+    db.getCbpc2020VoteArtConfig().then(setStatus);
+  };
+
+  useEffect(update, []);
+
   return (
     <WingBlank>
       <h3>投票详情</h3>
       <p>
-        总分=(观众票数/观众总人数 {state.sumAudience} )*30 + (评委票数/评委总人数 {state.sumTeacher} 
+        总分=(观众票数/观众总人数 {state.sumAudience} )*30 + (评委票数/评委总人数 {state.sumTeacher}
         )*70
       </p>
       <ul>
@@ -84,6 +92,56 @@ export default () => {
           </li>
         ))}
       </ul>
+      <Button
+        type="primary"
+        onClick={() => {
+          Modal.alert('清除', '确定清除测试数据?活动正式开始后请勿操作该按钮。', [
+            { text: '取消', onPress: () => console.log('cancel') },
+            {
+              text: '确定',
+              onPress: () => {
+                db.delCbpc2020VoteArt().then((success) => {
+                  if (!success) {
+                    Toast.fail('删除失败');
+                    return;
+                  }
+                  Toast.success('删除成功');
+                });
+              },
+            },
+          ]);
+        }}
+      >
+        清空测试数据
+      </Button>
+
+      <Button
+        style={{ marginTop: 10 }}
+        onClick={() => {
+          Modal.alert(status ? '关闭' : '重新开启', (status ? '关闭' : '重新开启') + '投票通道?', [
+            { text: '取消', onPress: () => console.log('cancel') },
+            {
+              text: '确定',
+              onPress: () => {
+                db.setCbpc2020VoteArtConfig(status == 1 ? 0 : 1).then((success) => {
+                  if (!success) {
+                    Toast.fail('操作失败');
+                    return;
+                  }
+                  Toast.success('操作成功');
+                  update();
+                });
+              },
+            },
+          ]);
+        }}
+      >
+        {status ? '关闭' : '重新开启'}投票通道
+      </Button>
+
+      <Button style={{ marginTop: 10 }} onClick={update}>
+        手动刷新数据
+      </Button>
     </WingBlank>
   );
 };

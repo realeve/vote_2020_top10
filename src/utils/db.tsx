@@ -38,3 +38,29 @@ export const getCbpc2020VoteArt: () => Promise<IAxiosState> = () =>
   axios({
     url: '/350/f1edbd94a0.json',
   });
+
+/**
+ *   @database: { 微信开发 }
+ *   @desc:     { 清除测试数据 }
+ */
+export const delCbpc2020VoteArt: () => Promise<boolean> = () =>
+  axios({
+    url: '/352/65f56968fb.json',
+  }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);
+
+export const getCbpc2020VoteArtConfig: () => Promise<number> = () =>
+  axios({
+    url: '/353/4dbbc2794a.json',
+  }).then((res) => res.data[0].status);
+
+/**
+ *   @database: { 微信开发 }
+ *   @desc:     { 更新活动状态 }
+ */
+export const setCbpc2020VoteArtConfig: (status: number) => Promise<boolean> = (status) =>
+  axios({
+    url: '/354/959c2c3f04.json',
+    params: {
+      status,
+    },
+  }).then(({ data: [{ affected_rows }] }) => affected_rows > 0);

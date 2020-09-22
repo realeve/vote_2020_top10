@@ -7,6 +7,7 @@ import * as db from '@/utils/db';
 import * as R from 'ramda';
 import paper from '@/utils/paper';
 import * as lib from '@/utils/lib';
+import { useInterval } from 'react-use';
 
 // import Detail from './votedetail';
 
@@ -16,7 +17,22 @@ const _usertype = window.location.href.includes('2020art_teacher') ? 1 : 0;
 function NewPage({ user, usertype = _usertype }: any) {
   const [state, setState] = useState([[]]);
   const [valid, setValid] = useState(false);
+
+  const [isend, setIsend] = useState(true);
+
+  const getStatus = () => {
+    db.getCbpc2020VoteArtConfig().then((res) => {
+      setIsend(res == 0);
+      if (res == 0 && !isend) {
+        Toast.fail('活动已关闭');
+      }
+    });
+  };
+
+  useInterval(getStatus, 5000);
+
   useEffect(() => {
+    getStatus();
     let res = window.localStorage.getItem('art2020');
     if (res == lib.ymd()) {
       setValid(false);
@@ -69,7 +85,7 @@ function NewPage({ user, usertype = _usertype }: any) {
         {usertype === 0 ? '现场观众' : '评委'}投票通道
       </WingBlank>
 
-      <div className={styles.content}>
+      <div>
         {paper.length === 0 ? (
           <WingBlank style={{ height: 180, lineHeight: '180px' }}>投票尚未开始，请稍候</WingBlank>
         ) : (
@@ -86,9 +102,9 @@ function NewPage({ user, usertype = _usertype }: any) {
         style={{ margin: '30px 15px' }}
         type="primary"
         onClick={onSubmit}
-        disabled={!valid || state[0].length == 0}
+        disabled={isend || !valid || state[0].length == 0}
       >
-        {!valid ? '已投票' : '提交'}
+        {isend ? '活动已关闭' : !valid ? '已投票' : '提交'}
       </Button>
 
       {/* {usertype == 1 && <Detail />} */}
